@@ -247,6 +247,10 @@ type Model5 struct {
 	B  string
 }
 
+type Model6 struct {
+	M5 Model5
+}
+
 type StringValidate string
 
 func (s StringValidate) Validate() error {

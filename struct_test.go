@@ -70,6 +70,7 @@ func TestValidateStruct(t *testing.T) {
 	m3 := Model2{}
 	m4 := Model2{M3: Model3{A: "abc"}, Model3: Model3{A: "abc"}}
 	m5 := Model2{Model3: Model3{A: "internal"}}
+	m6 := Model6{M5: Model5{}}
 	tests := []struct {
 		tag   string
 		model interface{}
@@ -120,6 +121,8 @@ func TestValidateStruct(t *testing.T) {
 		{"t8.6", &m4, []*FieldRules{Field(&m4.Model3)}, ""},
 		{"t8.7", &m3, []*FieldRules{Field(&m3.A, Required), Field(&m3.B, Required)}, "A: cannot be blank; B: cannot be blank."},
 		{"t8.8", &m3, []*FieldRules{Field(&m4.A, Required)}, "field #0 cannot be found in the struct"},
+		// embedded struct
+		{"t4.1", &m6, []*FieldRules{Field(&m6.M5.A, Required)}, "A: cannot be blank."},
 		// internal error
 		{"t9.1", &m5, []*FieldRules{Field(&m5.A, &validateAbc{}), Field(&m5.B, Required), Field(&m5.A, &validateInternalError{})}, "error internal"},
 	}
